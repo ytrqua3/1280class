@@ -1,0 +1,6 @@
+#!/bin/bash
+
+startWords=$(grep -w -o -E "^[^.]*" rap)
+endWords=$(grep -w -o -E "[^.]*$" rap)
+rap=$(sed -E -n "/$startWords/,/$endWords/p" despacito)
+echo <div>$rap</div>

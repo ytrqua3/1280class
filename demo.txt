@@ -1,0 +1,38 @@
+sort -t"," -k2 sed_table.csv | sed -r -n "/[^,]*,32/,/[^,]*,38/p"
+
+sort -t"," -k2 sed_table.csv | sed -r -n "/[^,]*,3[2-8]/p"
+
+sed -r -n "/[^,]*,3[2-8]/p" sed_table.csv
+
+sed -r -n "/^[AEIOUaeiou]/,/^[AEIOUaeiou]/p" sed_table.csv
+
+sed -r  "/[^,]*,3[2-8]/s//& #important line/" sed_table.csv
+
+start_pat="^([^,]*,){4}M04(,[^,]*){12}"
+end1="^,$"
+end="^(,|)$"
+
+#langara.sh
+start_pat="^([^,]*,){4}M04(,[^,]*){12}"
+end="^(,|)$"
+sed -r -n "/$start_pat/,/$end/p" $1 
+
+#langara2.sh
+start_pat="^([^,]*,){4}$2(,[^,]*){12}"
+end="^(,|)$"
+sed -r -n "/$start_pat/,/$end/p" $1 | sed "/^,$/d"
+
+echo "M05 M03" | xargs -n1 ./extract.sh schedule
+
+sed "/^Listen 80/c Listen 1000" http.conf
+sed -r -n "/^Listen 80/c Listen 1000" http.conf
+
+
+open_group="^\[\{"
+close_group="^\},"
+tagged_key="\"(.*)\""
+tagged_value="\"?([^\",]*)\"?,?"
+sed -r -n "/$open_group/,/$close_group/p" jsondata | sed -r -n "/$open_group|$close_group/!p"|sed -r "s/$tagged_key *: *$tagged_value/\1/"
+
+
+./json2csv.sh jsondata
